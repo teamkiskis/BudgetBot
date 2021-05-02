@@ -79,7 +79,7 @@ async def list_expenses(message: types.Message):
 
 @dp.message_handler()
 async def add_expense(message: types.Message):
-    """Добавляет новый расход"""
+    """Додає нові затрати"""
     try:
         expense = expenses.add_expense(message.text)
     except exceptions.NotCorrectMessage as e:
