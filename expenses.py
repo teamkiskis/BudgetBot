@@ -123,7 +123,7 @@ def _get_now_formatted() -> str:
 
 def _get_now_datetime() -> datetime.datetime:
     """Возвращает сегодняшний datetime с учётом времненной зоны Мск."""
-    tz = pytz.timezone("Europe/Moscow")
+    tz = pytz.timezone("Europe/Kiev")
     now = datetime.datetime.now(tz)
     return now
 
