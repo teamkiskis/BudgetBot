@@ -47,7 +47,7 @@ def get_today_statistics() -> str:
                    "from expense where date(created)=date('now', 'localtime')")
     result = cursor.fetchone()
     if not result[0]:
-        return "Сегодня ещё нет расходов"
+        return "Сьогодні ще немає витрат"
     all_today_expenses = result[0]
     cursor.execute("select sum(amount) "
                    "from expense where date(created)=date('now', 'localtime') "
@@ -55,11 +55,34 @@ def get_today_statistics() -> str:
                    "from category where is_base_expense=true)")
     result = cursor.fetchone()
     base_today_expenses = result[0] if result[0] else 0
-    return (f"Расходы сегодня:\n"
-            f"всего — {all_today_expenses} руб.\n"
-            f"базовые — {base_today_expenses} руб. из {_get_budget_limit()} руб.\n\n"
-            f"За текущий месяц: /month")
+    return (f"Сьогоднішні витрати:\n"
+            f"усього — {all_today_expenses} грн.\n"
+            f"базові — {base_today_expenses} грн. з {_get_budget_limit()} грн.\n\n"
+            f"За поточну неділю: /week\n"
+            f"За поточний місяць: /month")
 
+
+def get_week_statistics() -> str:
+    """Возвращает строкой статистику расходов за текущий месяц"""
+    now = _get_now_datetime()
+    first_day_of_month = f'{now.year:04d}-{now.month:02d}-01'
+    cursor = db.get_cursor()
+    cursor.execute(f"select sum(amount) "
+                   f"from expense where date(created) >= '{first_day_of_month}'")
+    result = cursor.fetchone()
+    if not result[0]:
+        return "На цьому тижні ще немає витрат"
+    all_today_expenses = result[0]
+    cursor.execute(f"select sum(amount) "
+                   f"from expense where date(created) >= '{first_day_of_month}' "
+                   f"and category_codename in (select codename "
+                   f"from category where is_base_expense=true)")
+    result = cursor.fetchone()
+    base_today_expenses = result[0] if result[0] else 0
+    return (f"Витрати на цьому тижні:\n"
+            f"усього — {all_today_expenses} грн.\n"
+            f"базові — {base_today_expenses} грн. з "
+            f"{now.day * _get_budget_limit()} грн.")
 
 def get_month_statistics() -> str:
     """Возвращает строкой статистику расходов за текущий месяц"""
@@ -70,7 +93,7 @@ def get_month_statistics() -> str:
                    f"from expense where date(created) >= '{first_day_of_month}'")
     result = cursor.fetchone()
     if not result[0]:
-        return "В этом месяце ещё нет расходов"
+        return "У цьому місяці ще немає витрат"
     all_today_expenses = result[0]
     cursor.execute(f"select sum(amount) "
                    f"from expense where date(created) >= '{first_day_of_month}' "
@@ -78,12 +101,10 @@ def get_month_statistics() -> str:
                    f"from category where is_base_expense=true)")
     result = cursor.fetchone()
     base_today_expenses = result[0] if result[0] else 0
-    return (f"Расходы в текущем месяце:\n"
-            f"всего — {all_today_expenses} руб.\n"
-            f"базовые — {base_today_expenses} руб. из "
-            f"{now.day * _get_budget_limit()} руб.")
-
-
+    return (f"Витрати в поточному місяці:\n"
+            f"усього — {all_today_expenses} грн.\n"
+            f"базові — {base_today_expenses} грн. з "
+            f"{now.day * _get_budget_limit()} грн.")
 def last() -> List[Expense]:
     """Возвращает последние несколько расходов"""
     cursor = db.get_cursor()
@@ -108,8 +129,8 @@ def _parse_message(raw_message: str) -> Message:
     if not regexp_result or not regexp_result.group(0) \
             or not regexp_result.group(1) or not regexp_result.group(2):
         raise exceptions.NotCorrectMessage(
-            "Не могу понять сообщение. Напишите сообщение в формате, "
-            "например:\n1500 метро")
+            "Не можу зрозуміти повідомлення. \nНапишіть повідомлення в форматі, "
+            "наприклад:\n1500 метро")
 
     amount = regexp_result.group(1).replace(" ", "")
     category_text = regexp_result.group(2).strip().lower()

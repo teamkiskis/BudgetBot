@@ -73,7 +73,12 @@ async def today_statistics(message: types.Message):
     answer_message = expenses.get_today_statistics()
     await message.answer(answer_message)
 
-
+@dp.message_handler(commands=['week'])
+async def week_statistics(message: types.Message):
+    """Відправляє статистику витрат поточного місяця"""
+    answer_message = expenses.get_week_statistics()
+    await message.answer(answer_message)
+    
 @dp.message_handler(commands=['month'])
 async def month_statistics(message: types.Message):
     """Відправляє статистику витрат поточного місяця"""
@@ -90,7 +95,7 @@ async def list_expenses(message: types.Message):
         return
 
     last_expenses_rows = [
-        f"{expense.amount} грн. на {expense.category_name} — нажми "
+        f"{expense.amount} грн. на {expense.category_name} — натисни "
         f"/del{expense.id} для видалення"
         for expense in last_expenses]
     answer_message = "Останні збережені витрати:\n\n* " + "\n\n* "\
@@ -107,7 +112,7 @@ async def add_expense(message: types.Message):
         await message.answer(str(e))
         return
     answer_message = (
-        f"Додані витрати {expense.amount} грн на {expense.category_name}.\n\n"
+        f"Додані витрати {expense.amount} грн\n\n"#на {expense.category_name}.\n\n"
         f"{expenses.get_today_statistics()}")
     await message.answer(answer_message)
 
