@@ -1,3 +1,9 @@
+logging.basicConfig(level=logging.INFO)
+# У поле "TELEGRAM_API_TOKEN" вставте token бота
+API_TOKEN = "API_TOKEN"
+# У поле "TELEGRAM_ACCESS_ID" вставте свій ID telegram
+ACCESS_ID = "ACCESS_ID"
+
 """Сервер Telegram бота, запускаемый непосредственно"""
 import logging
 import os
@@ -9,12 +15,6 @@ import exceptions
 import expenses
 from categories import Categories
 from middlewares import AccessMiddleware
-
-logging.basicConfig(level=logging.INFO)
-# У поле "TELEGRAM_API_TOKEN" вставте token бота
-API_TOKEN = "1781216379:AAGGPWmURS4M-4ARRZOe5sldLgY2sP6za3E"
-# У поле "TELEGRAM_ACCESS_ID" вставте свій ID telegram
-ACCESS_ID = "447165651"
 
 bot = Bot(token=API_TOKEN)
 
@@ -48,22 +48,22 @@ async def categories_list(message: types.Message):
     """Відправляє список категорій"""
     
     await message.answer("Категорії витрат:\n\n"
-"Продукти(їжа, провіант, магазин)\n"
-"Обід(столова, ланч, бізнес-ланч, перекус)\n"
-"Кафе(ресторан)\n"
-"Транспорт(метро, автобус, тролейбус)\n"
-"Таксі\n"
-"Телефон(поповнення)\n"
-"Книги(література, літра, літ-ра)\n"
-"Інтернет(інет, inet)\n"
-"Підписки\n"
-"Розваги\n"
-"Одяг\n"
-"Ліки\n"
-"Метро\n"
-"Квартплата\n"
-"Одяг\n"
-"Інше\n")   
+"* продукти (їжа, провіант, магазин)\n"
+"* обід (столова, ланч, бізнес-ланч, перекус)\n"
+"* кафе (ресторан)\n"
+"* транспорт (метро, автобус, тролейбус)\n"
+"* таксі\n"
+"* телефон (поповнення)\n"
+"* книги (література, літра, літ-ра)\n"
+"* інтернет (інет, inet)\n"
+"* підписки\n"
+"* розваги\n"
+"* одяг\n"
+"* ліки\n"
+"* метро\n"
+"* квартплата\n"
+"* одяг\n"
+"* інше\n")   
 
 
 
