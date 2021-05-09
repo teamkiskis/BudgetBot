@@ -44,7 +44,7 @@ async def categories_list(message: types.Message):
     answer_message = "Категорії витрат:\n\n* " +\
             ("\n* ".join([c.name+' ('+", ".join(c.aliases)+')' for c in categories]))
     await message.answer(answer_message)
-
+# papa jhon
 
 @dp.message_handler(commands=['today'])
 async def today_statistics(message: types.Message):
