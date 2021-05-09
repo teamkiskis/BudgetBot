@@ -37,7 +37,17 @@ async def del_expense(message: types.Message):
     await message.answer(answer_message)
 
 
+<<<<<<< HEAD
 
+=======
+@dp.message_handler(commands=['categories'])
+async def categories_list(message: types.Message):
+    """Отправляет список категорий расходов"""
+    categories = Categories().get_all_categories()
+    answer_message = "Категорії витрат:\n\n* " +\
+            ("\n* ".join([c.name+' ('+", ".join(c.aliases)+')' for c in categories]))
+    await message.answer(answer_message)
+>>>>>>> feature/New
 
 @dp.message_handler(commands=['today'])
 async def today_statistics(message: types.Message):
