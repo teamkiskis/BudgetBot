@@ -12,9 +12,9 @@ from middlewares import AccessMiddleware
 
 logging.basicConfig(level=logging.INFO)
 # У поле "TELEGRAM_API_TOKEN" вставте token бота
-API_TOKEN = "Вставте свій TELEGRAM_API_TOKEN"
+API_TOKEN = "1781216379:AAGGPWmURS4M-4ARRZOe5sldLgY2sP6za3E"
 # У поле "TELEGRAM_ACCESS_ID" вставте свій ID telegram
-ACCESS_ID = "Вставте USER_ID"
+ACCESS_ID = "447165651"
 
 bot = Bot(token=API_TOKEN)
 
@@ -29,10 +29,16 @@ async def send_welcome(message: types.Message):
         "Бот длі обліку фінансів\n\n"
         "Додати витрату: 250 таксі\n"
         "Сьогоднішня статистика: /today\n"
+        "Тижнева статистика: /week\n"
         "За поточний місяць: /month\n"
         "Останні внесені витрати: /expenses\n"
         "Категорії витрат: /categories")
 
+@dp.message_handler(commands=['week'])
+async def week_statistics(message: types.Message):
+    """Відправляє статистику витрат поточного місяця"""
+    answer_message = expenses.get_week_statistics()
+    await message.answer(answer_message)
 
 @dp.message_handler(lambda message: message.text.startswith('/del'))
 async def del_expense(message: types.Message):
