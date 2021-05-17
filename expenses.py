@@ -61,25 +61,24 @@ def get_today_statistics() -> str:
             f"За поточну неділю: /week\n"
             f"За поточний місяць: /month")
 
-
 def get_week_statistics() -> str:
-    """Возвращает строкой статистику расходов за текущий месяц"""
+    """Возвращает строкой статистику расходов за неделю"""
     now = _get_now_datetime()
-    first_day_of_month = f'{now.year:04d}-{now.month:02d}-01'
+    first_day_of_week = f'{now.month:04d}-{now.week:02d}-01'
     cursor = db.get_cursor()
     cursor.execute(f"select sum(amount) "
-                   f"from expense where date(created) >= '{first_day_of_month}'")
+                   f"from expense where date(created) >= '{first_day_of_week}'")
     result = cursor.fetchone()
     if not result[0]:
-        return "На цьому тижні ще немає витрат"
+        return "На цій неділі ще немає витрат"
     all_today_expenses = result[0]
     cursor.execute(f"select sum(amount) "
-                   f"from expense where date(created) >= '{first_day_of_month}' "
+                   f"from expense where date(created) >= '{first_day_of_week}' "
                    f"and category_codename in (select codename "
                    f"from category where is_base_expense=true)")
     result = cursor.fetchone()
     base_today_expenses = result[0] if result[0] else 0
-    return (f"Витрати на цьому тижні:\n"
+    return (f"Сьогоднішні витрати:\n"
             f"усього — {all_today_expenses} грн.\n"
             f"базові — {base_today_expenses} грн. з "
             f"{now.day * _get_budget_limit()} грн.")
@@ -105,6 +104,8 @@ def get_month_statistics() -> str:
             f"усього — {all_today_expenses} грн.\n"
             f"базові — {base_today_expenses} грн. з "
             f"{now.day * _get_budget_limit()} грн.")
+
+
 def last() -> List[Expense]:
     """Возвращает последние несколько расходов"""
     cursor = db.get_cursor()
